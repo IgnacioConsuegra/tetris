@@ -54,7 +54,7 @@ function createBoard(){
     for(let row = 0;  row < BOARD_WIDTH; row++) {
       arr.push(0);
     }
-    if(column > BOARD_HEIGHT - 5) {
+    if(column > BOARD_HEIGHT - 2) {
       while(arr.length) arr.pop();
       for(let row = 0;  row < BOARD_WIDTH; row++) {
         arr.push(1);
@@ -62,15 +62,15 @@ function createBoard(){
     }
     board.push(arr);
   }
-  console.log(board)
+  board[BOARD_HEIGHT - 1][BOARD_WIDTH - 6] = 0;
+  board[BOARD_HEIGHT - 1][BOARD_WIDTH - 7] = 0;
 }
 function checkCollision() {
   return piece.shape.find((row, y) => {
     return row.find((value, x) => {
       return(
         value !== 0 && 
-        board[y + piece.position.y] &&
-        board[y + piece.position.y][x + piece.position.x] !== 0
+        board[y + piece.position.y]?.[x + piece.position.x] !== 0
       )
     })
   })
