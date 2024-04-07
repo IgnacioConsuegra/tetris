@@ -5,6 +5,13 @@ const BLOCK_SIZE = 20;
 const BOARD_WIDTH = 14;
 const BOARD_HEIGHT = 30;
 const board = [];
+const piece = {
+  position : { x : 5, y : 5},
+  shape: [
+    [1, 1],
+    [1, 1]
+  ]
+}
 
 canvas.width = BLOCK_SIZE * BOARD_WIDTH;
 canvas.height = BLOCK_SIZE * BOARD_HEIGHT;
@@ -28,6 +35,14 @@ function draw() {
     })
   })
 
+  piece.shape.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if(value){
+        ctx.fillStyle = 'red'
+        ctx.fillRect(x + piece.position.x, y + piece.position.y, 1, 1);
+      }
+    })
+  })
 
 }
 createBoard();
@@ -49,3 +64,9 @@ function createBoard(){
   }
   console.log(board)
 }
+
+document.addEventListener('keydown', (event) => {
+  if(event.key === 'ArrowLeft') piece.position.x--;
+  if(event.key === 'ArrowRight') piece.position.x++;
+  if(event.key === 'ArrowDown') piece.position.y++;
+})
