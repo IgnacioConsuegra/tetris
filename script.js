@@ -17,7 +17,18 @@ canvas.width = BLOCK_SIZE * BOARD_WIDTH;
 canvas.height = BLOCK_SIZE * BOARD_HEIGHT;
 
 ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
-function animate(){
+
+let dropCounter = 0;
+let lastTime = 0;
+function animate(time = 0){
+  const deltaTime = time - lastTime;
+  lastTime = time;
+  dropCounter += deltaTime;
+  if(dropCounter > 1000) {
+    piece.position.y++;
+    dropCounter = 0;
+  }
+  handlePieceDown();
   draw();
   requestAnimationFrame(animate);
 }
@@ -54,7 +65,7 @@ function createBoard(){
     for(let row = 0;  row < BOARD_WIDTH; row++) {
       arr.push(0);
     }
-    if(column > BOARD_HEIGHT - 2) {
+    if(column > BOARD_HEIGHT - 5) {
       while(arr.length) arr.pop();
       for(let row = 0;  row < BOARD_WIDTH; row++) {
         arr.push(1);
@@ -62,8 +73,8 @@ function createBoard(){
     }
     board.push(arr);
   }
-  board[BOARD_HEIGHT - 1][BOARD_WIDTH - 6] = 0;
-  board[BOARD_HEIGHT - 1][BOARD_WIDTH - 7] = 0;
+  board[BOARD_HEIGHT - 4][BOARD_WIDTH - 7] = 0;
+  board[BOARD_HEIGHT - 4][BOARD_WIDTH - 6] = 0;
 }
 function checkCollision() {
   return piece.shape.find((row, y) => {
@@ -86,7 +97,26 @@ function solidifyPiece() {
   piece.position.x = 0;
   piece.position.y = 0;
 }
-
+function removeRows() {
+  const rowsToRemove = [];
+  board.forEach((row, y) => {
+    if(row.every(value => value === 1)){
+      rowsToRemove.push(y)
+    }
+  })
+  rowsToRemove.forEach((row) => {
+    board[row].forEach((value, indexValue) => {
+      board[row][indexValue] = 0;
+    })
+  })
+}
+function handlePieceDown(){
+  if(checkCollision()) {
+    piece.position.y--;
+    solidifyPiece();
+    removeRows();
+  }
+}
 document.addEventListener('keydown', (event) => {
   if(event.key === 'ArrowLeft') {
     piece.position.x--;
@@ -102,9 +132,6 @@ document.addEventListener('keydown', (event) => {
   };
   if(event.key === 'ArrowDown'){
     piece.position.y++;
-    if(checkCollision()) {
-      piece.position.y--;
-      solidifyPiece();
-    }
+    checkCollision();
   };
 })
