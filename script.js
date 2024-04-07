@@ -23,8 +23,8 @@ function animate(){
 }
 
 function draw() {
-  ctx.fillStyle = 'red';
-  ctx.fillRect(0, 0, ctx.width, ctx.height);
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   board.forEach((row, y) => {
     row.forEach((value, x) => {
