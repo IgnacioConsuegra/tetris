@@ -1,9 +1,8 @@
+import { BLOCK_SIZE, BOARD_HEIGHT, BOARD_WIDTH, EVENT_MOVEMENTS} from "./consts.js";
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
 const scoreId = document.getElementById("score");
-const BLOCK_SIZE = 20;
-const BOARD_WIDTH = 14;
-const BOARD_HEIGHT = 28;
+
 const board = [];
 let score = 0;
 const piece = {
@@ -36,7 +35,6 @@ const PIECES = [
 ]
 canvas.width = BLOCK_SIZE * BOARD_WIDTH;
 canvas.height = BLOCK_SIZE * BOARD_HEIGHT;
-
 ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
 let dropCounter = 0;
@@ -77,9 +75,7 @@ function draw() {
   })
 
 }
-changeScore();
 createBoard();
-animate();
 
 function createBoard(){
   for(let column = 0; column < BOARD_HEIGHT; column++) {
@@ -138,10 +134,11 @@ function removeRows() {
       board[row][indexValue] = 0;
     })
   })
-  score += 10 ** rowsToRemove.length;
-  changeScore();
-  moveRowsDown();
-
+  if(rowsToRemove.length) {
+    score += 10 ** rowsToRemove.length;
+    changeScore();
+    moveRowsDown();
+  }
 }
 function moveRowsDown(){
   for(let column = 0; column < BOARD_WIDTH; column++) {
@@ -177,23 +174,23 @@ function changeScore(){
   scoreId.innerHTML = "Score : " + score;
 }
 document.addEventListener('keydown', (event) => {
-  if(event.key === 'ArrowLeft') {
+  if(event.key === EVENT_MOVEMENTS.LEFT) {
     piece.position.x--;
     if(checkCollision()) {
       piece.position.x++;
     }
   };
-  if(event.key === 'ArrowRight'){
+  if(event.key === EVENT_MOVEMENTS.RIGHT){
     piece.position.x++;
     if(checkCollision()) {
       piece.position.x--;
     }
   };
-  if(event.key === 'ArrowDown'){
+  if(event.key === EVENT_MOVEMENTS.DOWN){
     piece.position.y++;
     checkCollision();
   };
-  if(event.key === 'ArrowUp'){
+  if(event.key === EVENT_MOVEMENTS.UP){
     const rotated = [];
     for(let i = 0; i < piece.shape[0].length; i++) {
       const row = [];
@@ -210,3 +207,17 @@ document.addEventListener('keydown', (event) => {
     }
   };
 })
+
+const playButton = document.getElementById("playButton");
+playButton.addEventListener("click", () => {
+  playButton.style.display = "none";
+  canvas.style.display = "inline";
+  const audio = new Audio("./tetris.mp3");
+  audio.volume = 0.5;
+  audio.loop = true;
+  audio.play();
+  changeScore();
+  animate();
+})
+
+

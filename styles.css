@@ -11,3 +11,15 @@ body{
   place-content: center;
   height: 100vh;
 }
+button{
+  position: fixed;
+  width: 200px;
+  height: 100px;
+  top: calc(50% - 50px);
+  left: calc(50% - 100px);
+  cursor: pointer;
+}
+canvas{
+  display: none;
+  border: 1px solid white;
+}
