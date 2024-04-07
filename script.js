@@ -12,7 +12,27 @@ const piece = {
     [1, 1]
   ]
 }
+const PIECES = [
+  [
+    [1, 1], 
+    [1, 1],
+  ],
 
+  [
+    [1, 1, 1, 1],
+  ],
+
+  [
+    [0, 1, 0], 
+    [1, 1, 1],
+  ],
+
+  [
+    [1, 0],
+    [1, 0],
+    [1, 1],
+  ],
+]
 canvas.width = BLOCK_SIZE * BOARD_WIDTH;
 canvas.height = BLOCK_SIZE * BOARD_HEIGHT;
 
@@ -89,13 +109,16 @@ function checkCollision() {
 function solidifyPiece() {
   piece.shape.forEach((row, y) => {
     row.forEach((value, x) => {
-      if(value === 1 ) {
+      if( value === 1 ) {
         board[y + piece.position.y][x + piece.position.x] = 1;
       }
     })
   })
   piece.position.x = 0;
   piece.position.y = 0;
+  piece.shape = PIECES[Math.floor(Math.random() * PIECES.length)]
+
+
 }
 function removeRows() {
   const rowsToRemove = [];
