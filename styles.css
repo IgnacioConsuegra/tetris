@@ -1,0 +1,11 @@
+*{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  background-color: black;
+}
+body{
+  display: grid;
+  place-content: center;
+  height: 100vh;
+}
