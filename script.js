@@ -1,10 +1,11 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
-
+const scoreId = document.getElementById("score");
 const BLOCK_SIZE = 20;
 const BOARD_WIDTH = 14;
-const BOARD_HEIGHT = 30;
+const BOARD_HEIGHT = 28;
 const board = [];
+let score = 0;
 const piece = {
   position : { x : 5, y : 5},
   shape: [
@@ -76,6 +77,7 @@ function draw() {
   })
 
 }
+changeScore();
 createBoard();
 animate();
 
@@ -105,6 +107,7 @@ function checkCollision() {
       )
     })
   })
+
 }
 function solidifyPiece() {
   piece.shape.forEach((row, y) => {
@@ -114,10 +117,13 @@ function solidifyPiece() {
       }
     })
   })
-  piece.position.x = 0;
+  piece.position.x = Math.floor(BOARD_WIDTH / 2 - 2);
   piece.position.y = 0;
-  piece.shape = PIECES[Math.floor(Math.random() * PIECES.length)]
 
+  piece.shape = PIECES[Math.floor(Math.random() * PIECES.length)]
+  if(checkCollision()){
+    gameOver();
+  }
 
 }
 function removeRows() {
@@ -132,6 +138,24 @@ function removeRows() {
       board[row][indexValue] = 0;
     })
   })
+  score += 10 ** rowsToRemove.length;
+  changeScore();
+  moveRowsDown();
+
+}
+function moveRowsDown(){
+  for(let column = 0; column < BOARD_WIDTH; column++) {
+    for(let row = 0; row < BOARD_HEIGHT; row++){
+      for(let h = 0; h < BOARD_HEIGHT - 1; h++) {
+        const current = board[h][row];
+        const below = board[h + 1][row];
+        if(current > below) {
+          board[h + 1][row] = current;
+          board[h][row] = 0;
+        }
+      }
+    }
+  }
 }
 function handlePieceDown(){
   if(checkCollision()) {
@@ -139,6 +163,18 @@ function handlePieceDown(){
     solidifyPiece();
     removeRows();
   }
+}
+function gameOver() {
+  alert("You lose");
+  board.forEach((row) => row.fill(0))
+}
+
+
+
+
+
+function changeScore(){
+  scoreId.innerHTML = "Score : " + score;
 }
 document.addEventListener('keydown', (event) => {
   if(event.key === 'ArrowLeft') {
@@ -156,5 +192,21 @@ document.addEventListener('keydown', (event) => {
   if(event.key === 'ArrowDown'){
     piece.position.y++;
     checkCollision();
+  };
+  if(event.key === 'ArrowUp'){
+    const rotated = [];
+    for(let i = 0; i < piece.shape[0].length; i++) {
+      const row = [];
+      for(let j  = piece.shape.length - 1;
+        j >= 0; j--) {
+        row.push(piece.shape[j][i]);
+      }
+      rotated.push(row);
+    };
+    const previousShape = piece.shape;
+    piece.shape = rotated;
+    if(checkCollision()) {
+      piece.shape = previousShape;
+    }
   };
 })

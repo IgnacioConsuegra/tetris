@@ -3,6 +3,8 @@
   padding: 0px;
   box-sizing: border-box;
   background-color: black;
+  overflow: hidden;
+  color: white;
 }
 body{
   display: grid;
