@@ -165,11 +165,6 @@ function gameOver() {
   alert("You lose");
   board.forEach((row) => row.fill(0))
 }
-
-
-
-
-
 function changeScore(){
   scoreId.innerHTML = "Score : " + score;
 }
@@ -207,7 +202,6 @@ document.addEventListener('keydown', (event) => {
     }
   };
 })
-
 const playButton = document.getElementById("playButton");
 playButton.addEventListener("click", () => {
   playButton.style.display = "none";
